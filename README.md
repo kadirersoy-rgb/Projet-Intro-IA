@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-# Projet-IA-Pygames
-=======
-# Simulateur de trafic urbain 2D
+# Projet Simulateur de trafic urbain 2D
 
 Projet Python/Pygame de simulation de circulation urbaine sur une grille 2D.
 
@@ -205,4 +202,3 @@ Lancer la simulation :
 python main.py
 ```
 
->>>>>>> origin/master
