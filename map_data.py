@@ -27,23 +27,33 @@
 ##########################################################################
 
 CITY_MAP = """
-BBBBBBBBBBBBBBBBBBBB
-BHHH    v   WWWWWW B
-BHHH    v   WWWWWW B
-BHHH  PFvFP WWWWWW B
-E>>>>>>>X>>>>>>>>>>S
-B       v          B
-B CCCCC v CCCCCCCC B
-B CCCCCPFvFPCCCCCC B
-E>>>>>>>X>>>>>>>>>>S
-B       v          B
-BHHHHHH v  WWWWWW  B
-BHHHHHHPFvFPWWWWWW B
-E>>>>>>>X>>>>>>>>>>S
-B       v          B
-B CCCCC v CCCCCCCC B
-B CCCCCPFvFPCCCCCC B
-E>>>>>>>X>>>>>>>>>>S
-B       v          B
-BBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBSBBBBBBSBBBBBBSBBBBBBB
+B        ^      ^      ^      B
+B        ^      ^      ^      B
+B        ^      ^      ^      B
+B  HH HH ^ CC C ^ CC C ^ WW W B
+B  HHHH  ^ CCC  ^ CCC  ^ WWWW B
+E>>>>>>PFX>>>>PFX>>>>PFX>>>>>>S
+B        F      F      F      B
+B        P      P      P      B
+B  HH HH ^ CC C ^ CC C ^ WW W B
+B  HHHH  ^ CCC  ^ CCC  ^ WWWW B
+E>>>>>>PFX>>>>PFX>>>>PFX>>>>>>S
+B        F      F      F      B
+B        P      P      P      B
+B  HH HH ^ CC C ^ CC C ^ WW W B
+B  HHHH  ^ CCC  ^ CCC  ^ WWWW B
+E>>>>>>PFX>>>>PFX>>>>PFX>>>>>>S
+B        F      F      F      B
+B        P      P      P      B
+B  HH HH ^ CC C ^ CC C ^ WW W B
+B  HHHH  ^ CCC  ^ CCC  ^ WWWW B
+E>>>>>>PFX>>>>PFX>>>>PFX>>>>>>S
+B        F      F      F      B
+B        P      P      P      B
+B  HH HH ^ CC C ^ CC C ^ WW W B
+B  HHHHH ^ CCCC ^ CCCC ^ WWWW B
+B  HHHHH ^ CCCC ^ CCCC ^ WWWW B
+B        ^      ^      ^      B
+BBBBBBBBBEBBBBBBEBBBBBBEBBBBBBB
 """

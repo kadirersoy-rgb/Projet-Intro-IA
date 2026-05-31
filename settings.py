@@ -5,7 +5,7 @@
 ##########################################################################
 
 # Taille d'une case de la grille en pixels
-ZOOM = 30
+ZOOM = 28
 
 # Nombre d'images par seconde
 FPS = 60
@@ -124,3 +124,12 @@ STATE_PEDESTRIAN_EXIT = 203
 ##########################################################################
 
 SHOW_GRID = True
+
+# Largeur reservee a droite pour la legende.
+LEGEND_PANEL_WIDTH = 320
+
+# Largeur minimale de la fenetre pour laisser respirer la carte et la legende.
+MIN_WINDOW_WIDTH = 960
+
+# Hauteur minimale de la fenetre quand la carte est petite.
+MIN_WINDOW_HEIGHT = 720
