@@ -118,6 +118,27 @@ class GameData:
             (x, y - 1),
         ]
 
+    def _is_pedestrian_way_tile(self, x, y):
+        return self.in_bounds(x, y) and self.map[x, y] == PEDESTRIAN_WAY
+
+    def _has_horizontal_pedestrian_way_pair(self, x, y):
+        return (
+            self._is_pedestrian_way_tile(x - 1, y)
+            and self._is_pedestrian_way_tile(x + 1, y)
+        )
+
+    def _has_vertical_pedestrian_way_pair(self, x, y):
+        return (
+            self._is_pedestrian_way_tile(x, y - 1)
+            and self._is_pedestrian_way_tile(x, y + 1)
+        )
+
+    def _has_pedestrian_way_pair(self, x, y):
+        return (
+            self._has_horizontal_pedestrian_way_pair(x, y)
+            or self._has_vertical_pedestrian_way_pair(x, y)
+        )
+
     def is_road(self, x, y):
         if not self.in_bounds(x, y):
             return False
@@ -131,6 +152,7 @@ class GameData:
             SPAWN,
             EXIT,
             TRAFFIC_LIGHT,
+            PEDESTRIAN_WAY,
         ]
 
     def is_crossing_tile(self, x, y):
@@ -139,17 +161,13 @@ class GameData:
 
         tile = self.map[x, y]
 
-        if tile in (PEDESTRIAN_WAY, TRAFFIC_LIGHT):
+        if tile == PEDESTRIAN_WAY:
             return True
 
         if not self.is_road(x, y):
             return False
 
-        return any(
-            self.in_bounds(nx, ny)
-            and self.map[nx, ny] in (PEDESTRIAN_WAY, TRAFFIC_LIGHT)
-            for nx, ny in self._neighbours4(x, y)
-        )
+        return self._has_pedestrian_way_pair(x, y)
 
     def is_walkable(self, x, y):
         if not self.in_bounds(x, y):
@@ -163,17 +181,32 @@ class GameData:
         if not self.in_bounds(x, y):
             return False
 
-        return self.map[x, y] in (EMPTY, PEDESTRIAN_WAY)
+        return self.map[x, y] == EMPTY
 
     def get_crossing_axis(self, x, y):
         if not self.is_crossing_tile(x, y):
             return "horizontal"
 
+        if self.map[x, y] == PEDESTRIAN_WAY:
+            horizontal_score = int(self.is_road(x - 1, y)) + int(self.is_road(x + 1, y))
+            vertical_score = int(self.is_road(x, y - 1)) + int(self.is_road(x, y + 1))
+
+            if vertical_score > horizontal_score:
+                return "vertical"
+
+            return "horizontal"
+
+        if self._has_horizontal_pedestrian_way_pair(x, y):
+            return "horizontal"
+
+        if self._has_vertical_pedestrian_way_pair(x, y):
+            return "vertical"
+
         def pedestrian_corridor(nx, ny):
             if not self.in_bounds(nx, ny):
                 return False
 
-            return self.map[nx, ny] in (PEDESTRIAN_WAY, TRAFFIC_LIGHT, EMPTY)
+            return self.map[nx, ny] in (PEDESTRIAN_WAY, EMPTY)
 
         horizontal_score = int(pedestrian_corridor(x - 1, y)) + int(pedestrian_corridor(x + 1, y))
         vertical_score = int(pedestrian_corridor(x, y - 1)) + int(pedestrian_corridor(x, y + 1))
@@ -607,6 +640,72 @@ class GameData:
 
         return self.map[x, y] in (TRAFFIC_LIGHT, CROSSROAD)
 
+    def _tile_after_move(self, current, target):
+        cx, cy = current
+        tx, ty = target
+        dx = tx - cx
+        dy = ty - cy
+
+        after = (tx + dx, ty + dy)
+
+        if not self.in_bounds(*after):
+            return None
+
+        if not self.is_road(*after):
+            return None
+
+        return after
+
+    def _move_direction(self, current, target):
+        cx, cy = current
+        tx, ty = target
+
+        return tx - cx, ty - cy
+
+    def _next_light_on_move(self, current, target):
+        dx, dy = self._move_direction(current, target)
+
+        if dx == 0 and dy == 0:
+            return None
+
+        tx, ty = target
+
+        if self.in_bounds(tx, ty) and self.map[tx, ty] == TRAFFIC_LIGHT:
+            return target
+
+        nx = tx + dx
+        ny = ty + dy
+
+        if self.in_bounds(nx, ny) and self.map[nx, ny] == TRAFFIC_LIGHT:
+            return nx, ny
+
+        return None
+
+    def vehicle_waits_for_queue_after_green_light(self, current, target, vehicle=None):
+        tx, ty = target
+
+        if not self.in_bounds(tx, ty):
+            return False
+
+        light_tile = self._next_light_on_move(current, target)
+
+        if light_tile is None:
+            return False
+
+        light = self._light_for_move(current, light_tile)
+        axis = self.get_movement_axis(current, target)
+
+        if light is None or not light.is_vehicle_green_for_axis(axis):
+            return False
+
+        dx, dy = self._move_direction(current, target)
+        after = (light_tile[0] + dx, light_tile[1] + dy)
+
+        if not self.in_bounds(*after) or not self.is_road(*after):
+            return False
+
+        return self.get_blocking_vehicle(after, vehicle) is not None
+
     def vehicle_can_enter(self, current, target, vehicle=None):
         if not self.is_vehicle_tile_available(target, vehicle):
             return False
@@ -641,7 +740,7 @@ class GameData:
         if not self.is_crossing_tile(*target):
             return True
 
-        if self.map[target[0], target[1]] == PEDESTRIAN_WAY:
+        if self.map[target[0], target[1]] == PEDESTRIAN_WAY and not self.is_road(*target):
             return True
 
         light = self._light_for_move(current, target)

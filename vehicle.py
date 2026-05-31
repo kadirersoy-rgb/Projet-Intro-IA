@@ -88,6 +88,14 @@ class Vehicle:
 
             return
 
+        if self.game.vehicle_waits_for_queue_after_green_light(
+            current_tile,
+            (nx, ny),
+            self
+        ):
+            self._stop_in_current_tile(STATE_FOLLOW)
+            return
+
         if not self.game.vehicle_can_enter(current_tile, (nx, ny), self):
             self._stop_in_current_tile(STATE_RED_LIGHT)
             return

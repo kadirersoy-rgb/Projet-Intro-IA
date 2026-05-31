@@ -3,7 +3,7 @@
 import random
 
 from settings import *
-from game_data import HOME, WORKPLACE, CITY_CENTER
+from game_data import HOME, WORKPLACE, CITY_CENTER, ZONE_SYMBOLS
 from vehicle import Vehicle
 from pedestrian import Pedestrian
 
@@ -62,9 +62,13 @@ class Spawner:
 
         spawn_zones = self._pedestrian_spawn_zones(current_period)
         spawn = self.game.choose_spawn("pedestrian", spawn_zones)
-        missions = self._pedestrian_missions(current_period)
 
-        if spawn is None or not missions:
+        if spawn is None:
+            return
+
+        missions = self._pedestrian_missions(current_period, spawn)
+
+        if not missions:
             return
 
         self.pedestrians.append(Pedestrian(self.game, spawn, missions))
@@ -152,29 +156,69 @@ class Spawner:
 
         return [WORKPLACE, CITY_CENTER]
 
-    def _pedestrian_missions(self, current_period):
+    def _pedestrian_missions(self, current_period, spawn):
         missions = []
+        current_position = spawn
 
         if current_period == MORNING:
-            target = self.game.choose_access([WORKPLACE, CITY_CENTER], "pedestrian")
+            target = self.game.choose_reachable_access(
+                current_position,
+                [WORKPLACE, CITY_CENTER],
+                "pedestrian",
+                missions
+            )
 
         elif current_period == AFTERNOON:
-            target = self.game.choose_access([HOME, WORKPLACE, CITY_CENTER], "pedestrian")
+            target = self.game.choose_reachable_access(
+                current_position,
+                [HOME, WORKPLACE, CITY_CENTER],
+                "pedestrian",
+                missions
+            )
 
         elif current_period == EVENING:
             if random.random() < 0.75:
-                target = self.game.choose_access([HOME], "pedestrian")
+                target = self.game.choose_reachable_access(
+                    current_position,
+                    [HOME],
+                    "pedestrian",
+                    missions
+                )
             else:
-                target = self.game.choose_exit("pedestrian")
+                target = self.game.choose_reachable_access(
+                    current_position,
+                    ZONE_SYMBOLS,
+                    "pedestrian",
+                    missions
+                )
 
         else:
-            target = self.game.choose_exit("pedestrian")
+            target = self.game.choose_reachable_access(
+                current_position,
+                ZONE_SYMBOLS,
+                "pedestrian",
+                missions
+            )
+
+        if target is None:
+            target = self.game.choose_reachable_access(
+                current_position,
+                ZONE_SYMBOLS,
+                "pedestrian",
+                missions
+            )
 
         if target:
             missions.append(target)
+            current_position = target
 
         if current_period != MORNING and random.random() < 0.25:
-            exit_target = self.game.choose_exit("pedestrian")
+            exit_target = self.game.choose_reachable_access(
+                current_position,
+                ZONE_SYMBOLS,
+                "pedestrian",
+                missions
+            )
 
             if exit_target and (not missions or missions[-1] != exit_target):
                 missions.append(exit_target)

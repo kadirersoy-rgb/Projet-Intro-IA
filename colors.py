@@ -44,10 +44,10 @@ traffic_colors = [
 
 CITY_COLORS = {
     # Bâtiments / zones
-    'B': (45, 45, 45),        # bâtiment
-    'H': (70, 95, 150),       # habitation
-    'W': (120, 120, 140),     # travail / bureaux
-    'C': (150, 110, 75),      # centre-ville
+    'B': (30, 31, 31),        # fond sombre
+    'H': (79, 100, 158),      # habitation
+    'W': (112, 74, 139),      # travail / bureaux
+    'C': (127, 83, 49),       # centre-ville
 
     # Routes directionnelles
     '>': (65, 65, 65),
@@ -63,11 +63,11 @@ CITY_COLORS = {
     'F': (65, 65, 65),
 
     # Entrée / sortie
-    'E': (50, 120, 200),
-    'S': (220, 130, 40),
+    'E': (42, 82, 156),
+    'S': (200, 45, 48),
 
     # Trottoir / espace libre
-    ' ': (25, 25, 25),
+    ' ': (185, 163, 118),
 }
 
 
