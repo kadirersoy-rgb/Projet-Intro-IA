@@ -32,7 +32,7 @@ DAY_PERIODS = [
 # Intensité de spawn selon la période
 TRAFFIC_INTENSITY = {
     MORNING: 1.5,      # beaucoup de monde le matin
-    AFTERNOON: 0.6,    # trafic plus calme
+    AFTERNOON: 0.4,    # trafic plus calme
     EVENING: 1.8       # beaucoup de monde le soir
 }
 
