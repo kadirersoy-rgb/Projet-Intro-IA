@@ -687,6 +687,9 @@ class GameData:
         if not self.in_bounds(tx, ty):
             return False
 
+        if self.is_crossing_tile(*current):
+            return False
+
         light_tile = self._next_light_on_move(current, target)
 
         if light_tile is None:
@@ -716,13 +719,36 @@ class GameData:
         if self._vehicle_inside_controlled_tile(*current):
             return True
 
+        if self.is_crossing_tile(*current) and self._next_light_on_move(current, target):
+            return True
+
         if not self._vehicle_stop_tile(*target):
             return True
 
         light = self._light_for_move(current, target)
         axis = self.get_movement_axis(current, target)
 
-        return light is None or light.is_vehicle_green_for_axis(axis)
+        if light is None:
+            return True
+
+        vehicle_state = light.get_vehicle_state(axis)
+
+        if vehicle_state == "GREEN":
+            if vehicle is not None:
+                vehicle.reset_orange_light_decision(light.position)
+
+            return True
+
+        if vehicle_state == "ORANGE":
+            if vehicle is None:
+                return True
+
+            return not vehicle.stops_for_orange_light(light.position)
+
+        if vehicle is not None:
+            vehicle.reset_orange_light_decision(light.position)
+
+        return False
 
     def _pedestrian_inside_controlled_tile(self, x, y):
         if not self.in_bounds(x, y):

@@ -76,6 +76,9 @@ GREEN_LIGHT_DURATION = 6
 ORANGE_LIGHT_DURATION = 2
 RED_LIGHT_DURATION = 6
 
+# Probabilite qu'une voiture decide de s'arreter au feu orange.
+ORANGE_LIGHT_STOP_PROBABILITY = 0.55
+
 ##########################################################################
 # SYMBOLES DE LA MAP
 ##########################################################################
