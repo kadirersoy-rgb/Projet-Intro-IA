@@ -3,7 +3,7 @@
 import random
 
 from settings import *
-from game_data import HOME
+from game_data import HOME, WORKPLACE, CITY_CENTER
 from spawner import Spawner
 from traffic_light import TrafficLight
 
@@ -154,10 +154,20 @@ class Simulation:
                 vehicle.set_missions(missions[:3])
 
         for pedestrian in self.pedestrians:
+            current_position = pedestrian.get_current_tile()
+
             if random.random() < 0.75:
-                target = self.game.choose_access([HOME], "pedestrian")
+                target = self.game.choose_reachable_access(
+                    current_position,
+                    [HOME],
+                    "pedestrian"
+                )
             else:
-                target = self.game.choose_exit("pedestrian")
+                target = self.game.choose_reachable_access(
+                    current_position,
+                    [HOME, WORKPLACE, CITY_CENTER],
+                    "pedestrian"
+                )
 
             if target:
                 pedestrian.set_missions([target])

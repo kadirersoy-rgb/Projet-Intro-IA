@@ -52,7 +52,7 @@ class TrafficLight:
         return "RED"
 
     def is_vehicle_green_for_axis(self, axis):
-        return self.get_vehicle_state(axis) in ("GREEN", "ORANGE")
+        return self.get_vehicle_state(axis) == "GREEN"
 
     def get_pedestrian_state(self, crossing_axis):
         if self.get_vehicle_state(crossing_axis) == "RED":

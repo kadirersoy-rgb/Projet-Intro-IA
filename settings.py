@@ -36,19 +36,13 @@ TRAFFIC_INTENSITY = {
     EVENING: 1.8       # beaucoup de monde le soir
 }
 
-##########################################################################
-# LIMITES D'AGENTS
-##########################################################################
-
+# Limite de véhicules et piétons dans la simulation
 MAX_VEHICLES = 200
 MAX_PEDESTRIANS = 100
 
-##########################################################################
-# VITESSES
-##########################################################################
-
-VEHICLE_SPEED = 2.0
-PEDESTRIAN_SPEED = 1.0
+# Vitesse des agents en cases par seconde
+VEHICLE_SPEED = 2.5
+PEDESTRIAN_SPEED = 0.8
 
 # Densité maximale avant blocage
 MAX_DENSITY = 8
@@ -73,11 +67,8 @@ VEHICLE_TURN_PENALTY = 0.35
 ##########################################################################
 
 GREEN_LIGHT_DURATION = 6
-ORANGE_LIGHT_DURATION = 2
+ORANGE_LIGHT_DURATION = 3
 RED_LIGHT_DURATION = 6
-
-# Probabilite qu'une voiture decide de s'arreter au feu orange.
-ORANGE_LIGHT_STOP_PROBABILITY = 0.55
 
 ##########################################################################
 # SYMBOLES DE LA MAP

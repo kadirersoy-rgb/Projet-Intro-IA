@@ -3,23 +3,13 @@
 import math
 
 
-##########################################################################
-#
-# CLAMP
-#
-##########################################################################
-
+# Clamp une valeur entre un minimum et un maximum
 def clamp(value, minimum, maximum):
 
     return max(minimum, min(value, maximum))
 
 
-##########################################################################
-#
-# DISTANCE EUCLIDIENNE
-#
-##########################################################################
-
+# Distance euclidienne entre deux points
 def distance(x1, y1, x2, y2):
 
     dx = x2 - x1
@@ -28,23 +18,13 @@ def distance(x1, y1, x2, y2):
     return math.hypot(dx, dy)
 
 
-##########################################################################
-#
-# DISTANCE MANHATTAN
-#
-##########################################################################
-
+# Distance de Manhattan entre deux points
 def manhattan_distance(x1, y1, x2, y2):
 
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-##########################################################################
-#
-# NORMALISATION VECTEUR
-#
-##########################################################################
-
+# Normalisation d'un vecteur
 def normalize(dx, dy):
 
     norm = math.hypot(dx, dy)
@@ -55,45 +35,25 @@ def normalize(dx, dy):
     return dx / norm, dy / norm
 
 
-##########################################################################
-#
-# INTERPOLATION LINÉAIRE
-#
-##########################################################################
-
+# Interpolation linéaire entre deux valeurs
 def lerp(a, b, t):
 
     return a + (b - a) * t
 
 
-##########################################################################
-#
-# TEST COLLISION CASE
-#
-##########################################################################
-
+# Renvoie True si deux positions sont sur la même case
 def same_tile(x1, y1, x2, y2):
 
     return int(x1) == int(x2) and int(y1) == int(y2)
 
 
-##########################################################################
-#
-# CENTRE D’UNE TUILE
-#
-##########################################################################
-
+# Renvoie le centre d'une case (x, y) en coordonnées flottantes
 def tile_center(x, y):
 
     return x + 0.5, y + 0.5
 
 
-##########################################################################
-#
-# VOISINS 4 DIRECTIONS
-#
-##########################################################################
-
+# Voisins d'une case (haut, bas, gauche, droite)
 def get_neighbours(x, y):
 
     return [

@@ -27,7 +27,6 @@ class Vehicle:
         self.speed = VEHICLE_SPEED
         self.state = STATE_DRIVE
         self.finished = False
-        self.orange_light_decisions = {}
         self.color = random.choice(VEHICLE_COLORS)
 
     def set_missions(self, missions):
@@ -277,17 +276,6 @@ class Vehicle:
             STATE_RED_LIGHT,
             STATE_TRAFFIC_JAM,
         )
-
-    def stops_for_orange_light(self, light_position):
-        if light_position not in self.orange_light_decisions:
-            self.orange_light_decisions[light_position] = (
-                random.random() < ORANGE_LIGHT_STOP_PROBABILITY
-            )
-
-        return self.orange_light_decisions[light_position]
-
-    def reset_orange_light_decision(self, light_position):
-        self.orange_light_decisions.pop(light_position, None)
 
     def get_current_tile(self):
         return int(self.x), int(self.y)

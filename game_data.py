@@ -524,7 +524,11 @@ class GameData:
         ]
 
         if not pool:
-            pool = self.walkable_tiles
+            pool = [
+                position
+                for position in self.walkable_tiles
+                if self.is_pedestrian_spawn_tile(*position)
+            ]
 
         if not pool:
             return None
@@ -731,24 +735,7 @@ class GameData:
         if light is None:
             return True
 
-        vehicle_state = light.get_vehicle_state(axis)
-
-        if vehicle_state == "GREEN":
-            if vehicle is not None:
-                vehicle.reset_orange_light_decision(light.position)
-
-            return True
-
-        if vehicle_state == "ORANGE":
-            if vehicle is None:
-                return True
-
-            return not vehicle.stops_for_orange_light(light.position)
-
-        if vehicle is not None:
-            vehicle.reset_orange_light_decision(light.position)
-
-        return False
+        return light.is_vehicle_green_for_axis(axis)
 
     def _pedestrian_inside_controlled_tile(self, x, y):
         if not self.in_bounds(x, y):
