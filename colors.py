@@ -86,5 +86,11 @@ TRAFFIC_LIGHT_COLORS = {
 # COULEURS DES AGENTS
 ##########################################################################
 
-VEHICLE_COLOR = (255, 255, 255)
+VEHICLE_COLORS = [
+    Color.red,
+    Color.cyan,
+    Color.yellow,
+    Color.white,
+]
+VEHICLE_COLOR = Color.white
 PEDESTRIAN_COLOR = (0, 255, 255)

@@ -30,6 +30,7 @@ class Simulation:
         self.period_index = 0
         self.current_period = DAY_PERIODS[self.period_index]
         self.period_timer = 0.0
+        self.waiting_for_cycle_restart = False
 
         self.paused = False
 
@@ -45,7 +46,8 @@ class Simulation:
         for light in self.traffic_lights:
             light.update(dt)
 
-        self.spawner.update(dt, self.current_period)
+        if not self.waiting_for_cycle_restart:
+            self.spawner.update(dt, self.current_period)
 
         self.update_density()
 
@@ -66,17 +68,37 @@ class Simulation:
         self.update_density()
 
     def update_period(self, dt):
+        if self.waiting_for_cycle_restart:
+            if not self.has_active_entities():
+                self.advance_period()
+
+            return
+
         self.period_timer += dt
 
         if self.period_timer < DAY_PERIOD_DURATION:
             return
 
         self.period_timer -= DAY_PERIOD_DURATION
+
+        if self.current_period == EVENING and self.has_active_entities():
+            self.waiting_for_cycle_restart = True
+            self.send_everyone_home()
+            return
+
+        self.advance_period()
+
+    def advance_period(self):
         self.period_index = (self.period_index + 1) % len(DAY_PERIODS)
         self.current_period = DAY_PERIODS[self.period_index]
+        self.period_timer = 0.0
+        self.waiting_for_cycle_restart = False
 
         if self.current_period == EVENING:
             self.send_everyone_home()
+
+    def has_active_entities(self):
+        return bool(self.vehicles or self.pedestrians)
 
     def send_everyone_home(self):
         for vehicle in self.vehicles:

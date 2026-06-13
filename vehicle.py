@@ -3,7 +3,7 @@
 import math
 import random
 from settings import *
-from colors import VEHICLE_COLOR
+from colors import VEHICLE_COLOR, VEHICLE_COLORS
 
 
 class Vehicle:
@@ -28,6 +28,7 @@ class Vehicle:
         self.state = STATE_DRIVE
         self.finished = False
         self.orange_light_decisions = {}
+        self.color = random.choice(VEHICLE_COLORS)
 
     def set_missions(self, missions):
         self.missions = list(missions)
@@ -342,16 +343,9 @@ class Vehicle:
             y - length * 0.50 * dy + width * 0.50 * ly
         )
 
-        body_color = VEHICLE_COLOR
-
-        if self.state == STATE_TRAFFIC_JAM:
-            body_color = (255, 224, 128)
-        elif self.state == STATE_RED_LIGHT:
-            body_color = (230, 230, 230)
-
         body = [front_left, front_right, rear_right, rear_left]
         renderer.draw_polygon(body, (18, 18, 18))
-        renderer.draw_polygon(body, body_color)
+        renderer.draw_polygon(body, self.color)
         renderer.draw_polygon(body, (18, 18, 18), 1)
 
         windshield = [

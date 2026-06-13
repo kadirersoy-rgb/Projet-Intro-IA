@@ -187,6 +187,14 @@ class Renderer:
         color = CITY_COLORS[SPAWN] if tile == SPAWN else CITY_COLORS[EXIT]
         direction = self._edge_arrow_direction(x, y)
 
+        if tile == EXIT:
+            direction = {
+                "right": "left",
+                "left": "right",
+                "up": "down",
+                "down": "up",
+            }[direction]
+
         self.draw_arrow_icon(rect, color, direction)
 
     def draw_vehicle(self, vehicle):
